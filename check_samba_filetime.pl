@@ -1,6 +1,9 @@
 #!/usr/bin/perl
 # Patrick Barnes
 # version 20180823
+# TODO:
+#   need to have a resursive option
+#   have final status (OK:# Warn:# Crit:#) as first line
 
 use strict;
 use warnings;

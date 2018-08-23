@@ -2,6 +2,10 @@ icinga script to check file modified times over samba
 
 Note: When contents of folder changes, folder modified time is updated
 
+TODO:
+* need to have a resursive option
+* have final status (OK:# Warn:# Crit:#) as first line
+
 uses
 * perl
 * libsmbclient
@@ -19,7 +23,7 @@ options
 -------
 | Parameter                                | what
 | ---------                                | ----
-| -v [0-3]                                 | 0 count results only, default <br/> 1 single-line, list warn/crit files/dir <br/> 2 multi-line, list files/dir + some options <br/> 3 multi-line, timestamps + full path + all options (login info)
+| -v [0-3]                                 | 0 count results only, default <br/> 1 single-line, list warn/crit files/dir <br/> 2 multi-line, list files/dir + some options <br/> 3 multi-line, timestamps + full path + all options
 | -d                                       | debug output (also -v 3)
 | --fileonly                               | ignore directories
 | -w [int], --age_warn [int]               | when warning is triggered in minutes
