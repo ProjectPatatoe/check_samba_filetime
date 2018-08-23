@@ -88,7 +88,8 @@ if ($verbose >= 2) {
 if ($verbose >= 3) {
 	print "Result    :",$result,"\n";
 	print "smb_user  :",$smb_user,"\n";
-	print "smb_pass  :",$smb_pass,"\n";
+	if ($smb_pass) { print "smb_pass  :(something)\n"; }
+	else { print "smb_pass  :(EMPTY!)\n"; }
 	print "smb_workgroup :",$smb_workgroup,"\n";
 	print "smb_authfile  :",$smb_authfile,"\n";
 }
