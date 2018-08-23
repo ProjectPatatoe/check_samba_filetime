@@ -17,14 +17,15 @@ perl uses...
 
 options
 -------
-| Parameter                                | what 
-| ---------                                | ---- 
+| Parameter                                | what
+| ---------                                | ----
 | -v [0-3]                                 | 0 count results only, default <br/> 1 single-line, list warn/crit files/dir <br/> 2 multi-line, list files/dir + some options <br/> 3 multi-line, timestamps + full path + all options (login info)
 | -d                                       | debug output (also -v 3)
 | --fileonly                               | ignore directories
 | -w [int], --age_warn [int]               | when warning is triggered in minutes
 | -c [int], --age_crit [int]               | when critical is triggered in minutes
-| --smb_path [str], --path [str]           | samba path (smb://host/share/dir)
+| --smb_host [str], --host [str], -h [str] | samba hostname/ip
+| --smb_path [str], --path [str]           | samba path (share/dir)
 | --smb_user [str], --user [str], --username [str] | username
 | --smb_pass [str], --pass [str], --password [str] | password
 | --smb_workgroup [str], --workgroup [str]         | workgroup / domain

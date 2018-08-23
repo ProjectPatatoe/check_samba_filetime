@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 # Patrick Barnes
-# version 20180822
+# version 20180823
 
 use strict;
 use warnings;
@@ -16,7 +16,9 @@ my $debug = 0;
 my $verbose = 0;
 my $fileonly = 0;
 my $recursiondir = 0; #TODO
-my $smb_path = "";
+my $smb_host = "";
+my $smb_path_t = ""; #after hostname
+my $smb_path = ""; #assembled (smb://$smb_host/$smb_path_t)
 my $smb_user = "";
 my $smb_pass = "";
 my $smb_workgroup = "";
@@ -26,26 +28,30 @@ my $age_crit = "1440"; #in minutes
 
 my $result = GetOptions (
 	"debug" => \$debug,
-	"d" => \$debug,
-	"v=i" => \$verbose,
+	"d"     => \$debug,
+	"v=i"   => \$verbose,
 	"fileonly" => \$fileonly,
-	"smb_path=s" => \$smb_path,
+	"smb_host=s"   => \$smb_host,
+	"host=s"   => \$smb_host,
+	"h=s"      => \$smb_host,
+	"smb_path=s" => \$smb_path_t,
 	"smb_user=s" => \$smb_user,
-	"user=s" => \$smb_user,
+	"user=s"     => \$smb_user,
 	"username=s" => \$smb_user,
 	"smb_pass=s" => \$smb_pass,
-	"pass=s" => \$smb_pass,
+	"pass=s"     => \$smb_pass,
 	"password=s" => \$smb_pass,
 	"smb_workgroup=s" => \$smb_workgroup,
-	"workgroup=s" => \$smb_workgroup,
-	"domain=s" => \$smb_workgroup,
-	"smb_authfile=s" => \$smb_authfile,
-	"age_warn=i"  => \$age_warn,
+	"workgroup=s"     => \$smb_workgroup,
+	"domain=s"        => \$smb_workgroup,
+	"smb_authfile=s"  => \$smb_authfile,
+	"age_warn=i"      => \$age_warn,
 	"w=i"  => \$age_warn,
 	"c=i"  => \$age_crit,
 	"age_crit=i"  => \$age_crit
 );
-if ($debug) { $verbose = 3; } 
+$smb_path = "smb://".$smb_host."/".$smb_path_t;
+if ($debug) { $verbose = 3; }
 if ($smb_authfile) {
 	my $cfg = new Config::Simple($smb_authfile);
 	if ($cfg->param('username')) {$smb_user = $cfg->param('username');}
@@ -74,6 +80,7 @@ if ($debug) {
 	print "dt_now :",$dt_now,"\n";
 }
 if ($verbose >= 2) {
+	print "smb_host  :",$smb_host,"\n";
 	print "smb_path  :",$smb_path,"\n";
 	print "age_warn  :",$age_warn,"\n";
 	print "age_crit  :",$age_crit,"\n";
@@ -120,16 +127,16 @@ foreach my $n (@dirarr) {
 
 	#if ($verbose == 2) { print $n->[1]; }
 	#elsif ($verbose >= 3) { print $smb_path,"/",$n->[1]; }
-	
+
 	my @fstat = $smb->stat($smb_path."/".$n->[1]);
-	
+
 	$dt = DateTime->from_epoch( epoch => $fstat[11]);
 	if ( $dt )
 	{
 		#time diff test
 		$dt_diff = $dt_now->delta_ms($dt); #minutes and seconds
 		$dt_diff_min = $dt_diff->in_units('minutes');
-		
+
 		if ($dt_diff_min > $age_crit) {
 			if ($verbose == 1) { print "CRIT ".$n->[1].","; }
 			elsif ($verbose == 2) { print "CRIT ".$n->[1]."\n"; }
@@ -149,7 +156,7 @@ foreach my $n (@dirarr) {
 		}
 	}
 	else {print "dt NULL\n";}
-	
+
 	if ($debug) {
 		print "raw          :",$n,"\n";
 		if ($dt) {
